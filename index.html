@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="veiwport" content="with=device-width, initial-scale=1">
+    <title>Chaos Triangle</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 16px;
+            background: #111;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 60vh;
+            min-height: 280px;
+            background: black;
+            border: 1px solid #555;
+        }
+
+        #mandelbrot-canvas {
+            cursor: crosshair;
+        }
+
+        .row {
+            margin: 10px 0;
+        }
+
+        button {
+            font-size: 15px;
+            padding: 6px 10px;
+            margin: 2px;
+            cursor: pointer;
+        }
+
+        p {
+            max-width: 800px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Chaos Triangle</h1>
+
+    <div class="row">
+        <button id="mandelbrot-tab">Mandelbrot</button>
+        <button id="sierpinski-tab">Sierpinski triangle</button>
+    </div>
+
+    <div id="mandelbrot-part">
+        <canvas id="mandelbrot-canvas"></canvas>
+        <p id="zoom-label"></p>
+
+        <div class="row">
+            <button id="zoom-in-button">Zoom in</button>
+            <button id="zoom-out-button">Zoom out</button>
+            <button id="reset-button">Reset</button>
+        </div>
+
+         <div class="row" id="spot-buttons">
+      Best spots:
+    </div>
+
+    <p>
+        Click the picture to zoom in on that spot. Shift+click or right click
+      zooms out. Every pixel is a number c. We start with z = 0 and keep doing
+      z = z*z + c. If z flies off to infinity the pixel gets a color based on how
+      fast it flew off. If it never does, the pixel is black.  
+    </p>
+  </div>
