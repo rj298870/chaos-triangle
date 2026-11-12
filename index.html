@@ -79,3 +79,130 @@
       fast it flew off. If it never does, the pixel is black.  
     </p>
   </div>
+
+  <div id="sierpinski-part" hidden>
+    <canvas id="sierpinski-canvas"></canvas>
+    <p id="dot-label"></p>
+
+    <div class="row">
+        <button id="restart-button"></button>
+  </div>
+
+   <p>
+      This is the chaos game. There are 3 corners. We start anywhere, pick a
+      random corner, jump halfway to it, and put a dot. Then we do it again and
+      again. It looks like it should be a mess but a Sierpinski triangle shows up.
+    </p>
+  </div>
+
+
+  <script>
+
+    function getByld(id) {
+        return document.getElementByld(id);
+    }
+
+    function fitCanvas(canvas) {
+        var width = canvas.clientWidth;
+        var height = canvas.clientHeight;
+
+        if(width * height > 1000000) {
+            var shrink = Math.sqrt(1000000 / (width * height));
+            width = Math.round(width * shrink);
+            height = Math.round(height * shrink);
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+    }
+
+     var mandelbrotCanvas = getById("mandelbrot-canvas");
+    var mandelbrotContext = mandelbrotCanvas.getContext("2d");
+
+    var START_X = -0.5;
+    var START_Y = 0;
+    var START-WIDTH = 3.5;
+
+    var centerX = START_X;
+    var centery = START_Y;
+    var veiwWidth = START_WIDTH;
+
+    var SMALLEST_WIDTH = 1e-13;
+
+    var drawNumber = 0;
+
+    function countSteps(cr, ci, maxSteps) {
+        var zr = 0;
+      var zi = 0;
+      var zrSquared = 0;
+      var ziSquared = 0;
+      var steps = 0;
+
+      while (steps < maxSteps && zrSquared + ziSquared <= 65536) {
+        zi = 2 * zr * zi + ci;
+        zr = zrSquared - ziSquared + cr;
+         zrSquared = zr * zr;
+        ziSquared = zi * zi;
+        steps = steps + 1;
+      }
+
+      if (steps >= maxSteps) {
+        return - 1;
+      }
+
+      return steps + 1 - Math.log2(0.5 * Math.log2(zrSquared + ziSquared));
+    }
+
+    function drawMandelbrot() {
+        drawNumber = drawNumber + 1;
+        var myNumber = drawNumber;
+
+        var width = mandelbrotCanvas.width;
+      var height = mandelbrotCanvas.height;
+      var unitsPerPixel = viewWidth / width;
+
+      var zoom = START_WIDTH / viewWidth;
+      var maxSteps = Math.round(180 + 65 * Math.log2(zoom));
+      
+      var picture = mandelbrotContext.createImageData(width, height);
+      var pixels = picture.data;
+      var row = 0;
+
+      updateZoomLabel(true);
+
+      function drawSomeRows() {
+        if (myNumber !== drawNumber) {
+          return; // a newer drawing started
+        }
+
+         var startTime = performance.now();
+        var firstRow = row;
+
+        while (row < height && performance.now() - startTime < 12) {
+          var ci = centerY - (row + 0.5 - height / 2) * unitsPerPixel;
+
+          for (var x = 0; x < width; x++) {
+            var cr = centerX + (x + 0.5 - width / 2) * unitsPerPixel;
+            var steps = countSteps(cr, ci, maxSteps);
+            var spot = (row * width + x) * 4;
+
+               if (steps < 0) {
+              pixels[spot] = 0;
+              pixels[spot + 1] = 0;
+              pixels[spot + 2] = 0;
+            } else {
+              var t = steps * 0.03;
+              pixels[spot] = 128 + 127 * Math.cos(2 * Math.PI * t);
+              pixels[spot + 1] = 128 + 127 * Math.cos(2 * Math.PI * (t + 0.33));
+              pixels[spot + 2] = 128 + 127 * Math.cos(2 * Math.PI * (t + 0.67));
+            }
+            pixels[spot + 3] = 255;
+          }
+
+          row = row + 1;
+        }
+
+        mandelbrotContext.putImageData(picture, 0, 0, 0, firstRow, width, row - firstRow);
+
+        if
+  </script>
